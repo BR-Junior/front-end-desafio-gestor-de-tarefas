@@ -2,48 +2,56 @@
 import { ref } from 'vue';
 import type { Ref } from "vue";
 import axios from "axios";
-import { userStore } from "@/stores/userStore";
 import router from "@/router";
 
+const nome: Ref<string> = ref('')
 const email: Ref<string> = ref('')
 const senha: Ref<string> = ref('')
 const vilid:Ref<boolean> = ref(false)
 
-const validLogin= async (data:{}) => {
-  const response = await axios.post('http://localhost:3333/entrar', data)
+const signUpPost= async (data:any) => {
+  try {
+   const response = await axios.post('http://localhost:3333/cadastrar', data)
+   console.log(response.data)
 
-  const storeUse = userStore()
-
-  storeUse.id = response.data.id
-  storeUse.token = response.data.token
-  console.log(storeUse.tokenIdGet().token, storeUse.tokenIdGet().id)
-  storeUse.tokenIdSet()
-  if (storeUse.id && storeUse.token) {
-    return router.push('/task')
-  }
+ } catch (erro) {
+   console.log()
+ }
 }
 
 const login = async (e:Event) => {
   const data = {
+    name: nome.value.toString(),
     email: email.value.toString(),
     password: senha.value.toString()
   }
-  await validLogin(data)
+
+  await signUpPost(data)
 }
 
 </script>
 
 <template>
-  <div id="signin">
+  <div id="signUp">
     <section>
       <h1>
-        SignIn
+        SignUp
       </h1>
-      
-      <form class="form-signin" @submit.prevent=login>
+
+      <form class="form-signUp" @submit.prevent=login>
         <span v-show="vilid">
           teste
         </span>
+        <label for="nome">Nome
+          <input
+              type="text"
+              placeholder="Nome"
+              id="nome"
+              name="nome"
+              v-model="nome"
+          />
+        </label>
+
         <label for="email">E-mail
           <input
               type="text"
@@ -68,23 +76,23 @@ const login = async (e:Event) => {
             type="submit"
             class="btn-entrar"
         >
-          Entrar
+          Salvar
         </button>
       </form>
 
       <button
           type="button"
           class="btn-cadastrar"
-          @click="router.push('/sign-up')"
+          @click="router.push('/')"
       >
-        Cadastrar
+        Voltar
       </button>
     </section>
   </div>
 </template>
 
 <style scoped>
-#signin {
+#signUp {
   background: rgba(158, 193, 244, 0.41);
   height:100vh;
   width: 100%;
@@ -105,7 +113,7 @@ h1 {
   margin-top: 10rem;
   margin-bottom: 5rem;
 }
-.form-signin {
+.form-signUp {
   display: flex;
   flex-direction: column;
   align-items: center;
