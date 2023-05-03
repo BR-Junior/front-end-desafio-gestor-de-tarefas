@@ -20,6 +20,7 @@ div {
   flex-direction: column;
   width: 500px;
   height: 500px;
+  margin: 0;
 }
 .title {
   height: 20%;
