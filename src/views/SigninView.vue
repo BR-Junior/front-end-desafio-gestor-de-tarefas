@@ -2,9 +2,9 @@
 import { ref, reactive } from 'vue';
 import { userStore } from "@/stores/userStore";
 import router from "@/router";
-import {httpLoginPost, IReulst, postLoginUseCase} from "@/axios/axios";
 import type {ITeste} from "@/views/Interfaces";
 import MassageErro from "@/components/MassageErro.vue";
+import {useCaseLogin} from "@/axios/useCases/UseCaseLogin";
 
 
 const msg = ref<string>('')
@@ -15,6 +15,36 @@ const loginInputRef:ITeste = reactive({
   password: '',
 })
 
+const validLogin = (id:string, token:string) => {
+
+  if (!id && !token) {
+
+    setTimeout(() => msg.value = '', 3000)
+
+    return msg.value = 'E-mail ou Senha incorreta'
+  }
+}
+
+const saveDataLogin = async (loginInput:ITeste) => {
+
+  const result = await useCaseLogin.execute('entrar', loginInput)
+
+  const{id, token} = result
+
+  validLogin(id, token)
+
+  if (id && token) {
+
+    const storeUse = userStore()
+
+    storeUse.id = id
+    storeUse.token = token
+    storeUse.tokenIdSave()
+
+    return router.push('/task')
+  }
+}
+
 
 const login = async () => {
   const loginInput = {
@@ -22,19 +52,7 @@ const login = async () => {
     password: loginInputRef.password
   }
 
-  const result = await postLoginUseCase.execute('entrar', loginInput)
-
-  const{id, token} = result
-
-  if (!id && !token) return
-
-  const storeUse = userStore()
-
-  storeUse.id = id
-  storeUse.token = token
-  storeUse.tokenIdSave()
-
-  return router.push('/task')
+  saveDataLogin(loginInput)
 }
 
 </script>
@@ -45,7 +63,7 @@ const login = async () => {
       <h1>
         SignIn
       </h1>
-      
+
       <form class="form-signin" @submit.prevent=login>
 
         <MassageErro :msg=msg v-show=msg />
