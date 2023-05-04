@@ -2,10 +2,13 @@
 import { ref, reactive } from 'vue';
 import { userStore } from "@/stores/userStore";
 import router from "@/router";
-import {http} from "@/axios/axios";
+import {httpLoginPost, IReulst, postLoginUseCase} from "@/axios/axios";
 import type {ITeste} from "@/views/Interfaces";
+import MassageErro from "@/components/MassageErro.vue";
 
-const menssageErro = ref<boolean>(false)
+
+const msg = ref<string>('')
+
 
 const loginInputRef:ITeste = reactive({
   email: '',
@@ -19,25 +22,21 @@ const login = async () => {
     password: loginInputRef.password
   }
 
-  const result = await http.post('entrar', loginInput)
-      .catch((error) => {
-    if (error.response) menssageErro.value = true
-  })
+  const result = await postLoginUseCase.execute('entrar', loginInput)
 
-  if (!result) return
+  const{id, token} = result
 
-  const { id, token } = result.data
+  if (!id && !token) return
 
-  if (id && token) {
+  const storeUse = userStore()
 
-    const storeUse = userStore()
+  storeUse.id = id
+  storeUse.token = token
+  storeUse.tokenIdSave()
 
-    storeUse.id = id
-    storeUse.token = token
-
-    return router.push('/task')
-  }
+  return router.push('/task')
 }
+
 </script>
 
 <template>
@@ -48,9 +47,9 @@ const login = async () => {
       </h1>
       
       <form class="form-signin" @submit.prevent=login>
-        <span class="menssageErro" v-show="menssageErro">
-          E-mail ou Senha incorreta
-        </span>
+
+        <MassageErro :msg=msg v-show=msg />
+
         <label for="email">E-mail
           <input
               type="text"
@@ -107,16 +106,6 @@ section {
   flex-direction: column;
   align-items: center;
   border-radius: 1rem;
-}
-.menssageErro {
-  background: rgba(255, 0, 0, 0.30);
-  color: rgba(0, 0, 0);;
-  width: 35%;
-  height: 2rem;
-  border-radius: .5rem;
-  text-align: center;
-  padding-top: .5rem;
-
 }
 h1 {
   margin-top: 10rem;

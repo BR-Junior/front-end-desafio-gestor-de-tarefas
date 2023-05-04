@@ -9,7 +9,7 @@ export const userStore = defineStore('userStore', () => {
   const id:Ref<string> = ref('')
 
   //set
-  const tokenIdSet = () => {
+  const tokenIdSave = () => {
     localStorage.setItem('id', id.value)
     localStorage.setItem('token', token.value)
   }
@@ -19,5 +19,5 @@ export const userStore = defineStore('userStore', () => {
     return { token: localStorage.getItem('token'), id: localStorage.getItem('id') }
   }
 
-  return { token, id, tokenIdSet, tokenIdGet }
+  return { token, id, tokenIdSave, tokenIdGet }
 })
