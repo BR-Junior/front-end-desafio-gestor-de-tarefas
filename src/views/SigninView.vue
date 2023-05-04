@@ -1,36 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Ref } from "vue";
-import axios from "axios";
+import { ref, reactive } from 'vue';
 import { userStore } from "@/stores/userStore";
 import router from "@/router";
+import {http} from "@/axios/axios";
+import type {ITeste} from "@/views/Interfaces";
 
-const email: Ref<string> = ref('')
-const senha: Ref<string> = ref('')
-const vilid:Ref<boolean> = ref(false)
+const menssageErro = ref<boolean>(false)
 
-const validLogin= async (data:{}) => {
-  const response = await axios.post('http://localhost:3333/entrar', data)
+const loginInputRef:ITeste = reactive({
+  email: '',
+  password: '',
+})
 
-  const storeUse = userStore()
 
-  storeUse.id = response.data.id
-  storeUse.token = response.data.token
-  console.log(storeUse.tokenIdGet().token, storeUse.tokenIdGet().id)
-  storeUse.tokenIdSet()
-  if (storeUse.id && storeUse.token) {
+const login = async () => {
+  const loginInput = {
+    email: loginInputRef.email,
+    password: loginInputRef.password
+  }
+
+  const result = await http.post('entrar', loginInput)
+      .catch((error) => {
+    if (error.response) menssageErro.value = true
+  })
+
+  if (!result) return
+
+  const { id, token } = result.data
+
+  if (id && token) {
+
+    const storeUse = userStore()
+
+    storeUse.id = id
+    storeUse.token = token
+
     return router.push('/task')
   }
 }
-
-const login = async (e:Event) => {
-  const data = {
-    email: email.value.toString(),
-    password: senha.value.toString()
-  }
-  await validLogin(data)
-}
-
 </script>
 
 <template>
@@ -41,8 +48,8 @@ const login = async (e:Event) => {
       </h1>
       
       <form class="form-signin" @submit.prevent=login>
-        <span v-show="vilid">
-          teste
+        <span class="menssageErro" v-show="menssageErro">
+          E-mail ou Senha incorreta
         </span>
         <label for="email">E-mail
           <input
@@ -50,7 +57,7 @@ const login = async (e:Event) => {
               placeholder="E-mail"
               id="email"
               name="email"
-              v-model="email"
+              v-model="loginInputRef.email"
           />
         </label>
 
@@ -60,7 +67,7 @@ const login = async (e:Event) => {
               placeholder="Senha"
               id="senha"
               name="senha"
-              v-model="senha"
+              v-model="loginInputRef.password"
           />
         </label>
 
@@ -100,6 +107,16 @@ section {
   flex-direction: column;
   align-items: center;
   border-radius: 1rem;
+}
+.menssageErro {
+  background: rgba(255, 0, 0, 0.30);
+  color: rgba(0, 0, 0);;
+  width: 35%;
+  height: 2rem;
+  border-radius: .5rem;
+  text-align: center;
+  padding-top: .5rem;
+
 }
 h1 {
   margin-top: 10rem;

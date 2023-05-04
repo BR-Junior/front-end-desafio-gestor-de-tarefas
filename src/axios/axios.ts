@@ -1,4 +1,24 @@
-export {}
+import axios from "axios";
+import type { AxiosInstance } from "axios";
+
+export const http:AxiosInstance = axios.create({
+  baseURL: 'http://localhost:3333/',
+})
+
+// export const loginTeste = () => {
+//   http.post(url, data)
+//     .then((reponse) => (result = reponse.data))
+// }
+
+
+
+
+
+
+
+
+
+
 // import axios from "axios/index";
 //
 // interface ILoginData {
