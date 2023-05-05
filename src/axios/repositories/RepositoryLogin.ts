@@ -18,7 +18,7 @@ export class RepositoryLogin implements IRepositoryLogin{
 
     const {id, token } = response.data
 
-    if (!id && !token) return response.data
+    if (!id && !token) return response.data.error.message
 
     const result = {id: id,token: token}
 

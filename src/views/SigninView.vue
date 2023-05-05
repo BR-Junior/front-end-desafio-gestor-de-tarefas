@@ -15,25 +15,24 @@ const loginInputRef:ITeste = reactive({
   password: '',
 })
 
-const validLogin = (id:string, token:string) => {
+// const validLogin = (data:any) => {
+//    return [...data].map(i => i)
+// }
+
+const saveDataLogin = async (loginInput:ITeste) => {
+
+  const result = await useCaseLogin.execute('entrar', loginInput)
+  console.log(result)
+
+  const{id, token} = result
 
   if (!id && !token) {
 
     setTimeout(() => msg.value = '', 3000)
 
-    return msg.value = 'E-mail ou Senha incorreta'
-  }
-}
+    return msg.value = `${result}`
 
-const saveDataLogin = async (loginInput:ITeste) => {
-
-  const result = await useCaseLogin.execute('entrar', loginInput)
-
-  const{id, token} = result
-
-  validLogin(id, token)
-
-  if (id && token) {
+  } else {
 
     const storeUse = userStore()
 
@@ -42,6 +41,7 @@ const saveDataLogin = async (loginInput:ITeste) => {
     storeUse.tokenIdSave()
 
     return router.push('/task')
+
   }
 }
 
@@ -51,6 +51,8 @@ const login = async () => {
     email: loginInputRef.email,
     password: loginInputRef.password
   }
+
+
 
   saveDataLogin(loginInput)
 }
