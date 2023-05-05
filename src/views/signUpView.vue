@@ -1,25 +1,34 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { Ref } from "vue";
-import axios from "axios";
 import router from "@/router";
+import {signUpUseCase} from "@/axios/signUp/useCase";
+import MassageErro from "@/components/MassageErro.vue";
 
 const nome: Ref<string> = ref('')
 const email: Ref<string> = ref('')
 const senha: Ref<string> = ref('')
-const vilid:Ref<boolean> = ref(false)
+// const vilid:Ref<boolean> = ref(false)
+
+const msg: Ref<string> = ref('')
 
 const signUpPost= async (data:any) => {
-  try {
-   const response = await axios.post('http://localhost:3333/cadastrar', data)
-   console.log(response.data)
 
- } catch (erro) {
-   console.log()
- }
+  const response = await signUpUseCase.execute('cadastrar', data)
+
+  if (!response.id) {
+    msg.value = `${Object.keys(response)}`
+    console.log(response)
+
+  } else {
+
+    msg.value = 'Cadastro foito com sucesso'
+
+    return setTimeout(() => router.push('/'), 3000)
+  }
 }
 
-const login = async (e:Event) => {
+const login = async () => {
   const data = {
     name: nome.value.toString(),
     email: email.value.toString(),
@@ -39,9 +48,7 @@ const login = async (e:Event) => {
       </h1>
 
       <form class="form-signUp" @submit.prevent=login>
-        <span v-show="vilid">
-          teste
-        </span>
+        <MassageErro :msg="msg" v-show="msg" style="background: green"/>
         <label for="nome">Nome
           <input
               type="text"

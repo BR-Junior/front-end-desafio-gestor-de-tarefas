@@ -4,7 +4,7 @@ import { userStore } from "@/stores/userStore";
 import router from "@/router";
 import type {ITeste} from "@/views/Interfaces";
 import MassageErro from "@/components/MassageErro.vue";
-import {useCaseLogin} from "@/axios/useCases/UseCaseLogin";
+import {useCaseLogin} from "@/axios/login/useCase/UseCaseLogin";
 
 
 const msg = ref<string>('')

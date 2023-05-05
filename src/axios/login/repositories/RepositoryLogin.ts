@@ -1,5 +1,5 @@
-import type {IRepositoryLogin} from "@/axios/repositories/IRepositoryLogin";
-import type {ILoginRequestDTO, ILoginResponseDTO} from "@/axios/DTO/ILoginDTO";
+import type {IRepositoryLogin} from "@/axios/login/repositories/IRepositoryLogin";
+import type {ILoginRequestDTO, ILoginResponseDTO} from "@/axios/login/DTO/ILoginDTO";
 import axios from "axios";
 import type { AxiosInstance } from "axios";
 
