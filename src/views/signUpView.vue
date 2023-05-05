@@ -3,21 +3,35 @@ import { ref } from 'vue';
 import type { Ref } from "vue";
 import router from "@/router";
 import {signUpUseCase} from "@/axios/signUp/useCase";
-import MassageErro from "@/components/MassageErro.vue";
+import MassageErro from "@/components/MassageModal.vue";
 
 const nome: Ref<string> = ref('')
 const email: Ref<string> = ref('')
 const senha: Ref<string> = ref('')
-// const vilid:Ref<boolean> = ref(false)
 
 const msg: Ref<string> = ref('')
+const msgNome: Ref<string> = ref('')
+const msgEmail: Ref<string> = ref('')
+const msgSenha: Ref<string> = ref('')
+
 
 const signUpPost= async (data:any) => {
 
   const response = await signUpUseCase.execute('cadastrar', data)
 
   if (!response.id) {
-    msg.value = `${Object.keys(response)}`
+
+    console.log(response)
+
+
+    const  {name, email, password} = response
+
+    msgNome.value = `${name ? name : '' }`
+
+    msgEmail.value = `${email ? email : ''}`
+
+    msgSenha.value = ` ${password ? password : ''}`
+
     console.log(response)
 
   } else {
@@ -28,7 +42,7 @@ const signUpPost= async (data:any) => {
   }
 }
 
-const login = async () => {
+const handleSubmit = async () => {
   const data = {
     name: nome.value.toString(),
     email: email.value.toString(),
@@ -47,8 +61,13 @@ const login = async () => {
         SignUp
       </h1>
 
-      <form class="form-signUp" @submit.prevent=login>
+      <form class="form-signUp" @submit.prevent=handleSubmit>
         <MassageErro :msg="msg" v-show="msg" style="background: green"/>
+        <div class="message-error">
+        <MassageErro :msg="msgNome" v-show="msgNome" />
+        <MassageErro :msg="msgEmail" v-show="msgEmail" />
+        <MassageErro :msg="msgSenha" v-show="msgSenha" />
+        </div>
         <label for="nome">Nome
           <input
               type="text"
@@ -143,6 +162,10 @@ input[type=text], button {
   border: none;
   background: rgba(26, 98, 205, 0.6);
   margin-top: 1rem;
+}
+.message-error {
+  display: flex;
+  gap: 1rem;
 }
 
 @media (max-width: 500px) {

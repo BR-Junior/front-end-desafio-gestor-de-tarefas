@@ -6,7 +6,7 @@
 
 
 <script setup lang="ts">
-const props = defineProps ({
+defineProps ({
   msg:{
     type: String,
     default: ''
@@ -22,6 +22,5 @@ const props = defineProps ({
   border-radius: 5px;
   padding: 10px;
   max-width: 400px;
-  margin: 30px auto;
 }
 </style>

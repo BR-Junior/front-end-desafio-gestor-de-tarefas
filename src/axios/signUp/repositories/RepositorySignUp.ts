@@ -8,7 +8,7 @@ import type { AxiosInstance } from "axios";export const http:AxiosInstance = axi
 export class RepositorySignUp implements IRepositorySignUp{
 
   private repository = http
-
+  
   async postSignUp(url: string, dataSignUp: ISignUpRequestDTO): Promise<ISignUpResponseDTO> {
 
     const response = await this.repository.post(url, dataSignUp).catch((error) => {
@@ -18,9 +18,9 @@ export class RepositorySignUp implements IRepositorySignUp{
     const {id, name, email, password  } = response.data
 
     if (!id && !email) {
-      // const { name, email, ppassworda } = response.data.errors.body
-      // const resultErrors = { name: name, email: email, password: password }
+
       return response.data.errors.body
+
     }
 
     const result = {id: id, name: name, email: email, password: password}

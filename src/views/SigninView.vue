@@ -3,7 +3,7 @@ import { ref, reactive } from 'vue';
 import { userStore } from "@/stores/userStore";
 import router from "@/router";
 import type {ITeste} from "@/views/Interfaces";
-import MassageErro from "@/components/MassageErro.vue";
+import MassageErro from "@/components/MassageModal.vue";
 import {useCaseLogin} from "@/axios/login/useCase/UseCaseLogin";
 
 
@@ -15,9 +15,6 @@ const loginInputRef:ITeste = reactive({
   password: '',
 })
 
-// const validLogin = (data:any) => {
-//    return [...data].map(i => i)
-// }
 
 const saveDataLogin = async (loginInput:ITeste) => {
 
@@ -46,7 +43,7 @@ const saveDataLogin = async (loginInput:ITeste) => {
 }
 
 
-const login = async () => {
+const handleSubmit = async () => {
   const loginInput = {
     email: loginInputRef.email,
     password: loginInputRef.password
@@ -66,7 +63,7 @@ const login = async () => {
         SignIn
       </h1>
 
-      <form class="form-signin" @submit.prevent=login>
+      <form class="form-signin" @submit.prevent=handleSubmit>
 
         <MassageErro :msg=msg v-show=msg />
 
