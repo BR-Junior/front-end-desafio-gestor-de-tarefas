@@ -11,9 +11,10 @@ export enum IStatus {
 export interface ITaskRequestDTO {
   idUser:string
   // priority?:IPriority
-  // status?:IStatus
+  status?:string
   // creationDate?:string
   token: string
+  sort?: {}
 }
 export interface ITaskResponseDTO {
   id: string
@@ -21,4 +22,11 @@ export interface ITaskResponseDTO {
   priority: string
   creationDate: string
   status: string
+}
+export interface ITaskCreateDTO {
+  token: string,
+  task: string
+  priority: string
+  status: string
+  idUser: string
 }
