@@ -5,6 +5,8 @@ import {userStore} from "@/stores/userStore";
 import {useCaseTaskFindAll} from "@/axios/task/useCase/TaskUseCaseFindAll";
 import {useCaseTaskCreate} from "@/axios/task/useCase/TaskUseCaseCreate";
 import {taskUseCaseDelete} from "@/axios/task/useCase/TaskUseCaseDelete";
+import {taskUseCaseFindOne} from "@/axios/task/useCase/TaskUseCaseFindOne";
+import {taskUseCaseUpdate} from "@/axios/task/useCase/TaskUseCaseUpdate";
 
 
 const list= ref()
@@ -13,15 +15,16 @@ const list= ref()
 const storeUse = userStore()
 const idUser = storeUse.tokenIdGet().id as string
 const token = storeUse.tokenIdGet().token as string
-const status = ref<string>()
 const priorityOrderRef = ref<boolean>(false)
+const statusOrderRef = ref<boolean>(false)
+const searchRef = ref<string>('')
 
 const taskFormInputRef = reactive({
+  id: '',
   task: '',
   priority: '',
   status: '',
 })
-
 const taskSelectData = {
   priority: ['low', 'normal', 'high'],
   status: ['open', 'doing']
@@ -36,15 +39,25 @@ onMounted(async () => {
 
 })
 
-watch(status, async () => {
-  await statusOrder()
+watch(searchRef,async () => {
+  if (searchRef.value.length >= 3 ) {
+
+    const dataTask = {
+      idUser: idUser,
+      token: token,
+      task: searchRef.value
+    }
+
+    list.value = await useCaseTaskFindAll.execute('task', dataTask)
+  }
+
+  if (!searchRef.value.length) return list.value = await taskList()
 })
 
 const taskList = async () => {
   const dataTask = {
     idUser: idUser,
     token: token,
-    status: status.value
   }
 
  return  await useCaseTaskFindAll.execute('task', dataTask)
@@ -88,30 +101,44 @@ const taskDelete = async (id:string) => {
   list.value = await taskList()
 }
 
-const statusOrder = async () => {
-  if (status.value === 'open'){
-
-    const dataTask = {
-      idUser: idUser,
-      token: token,
-      sort: {status: 'asc'}
-    }
-
-    return list.value = await useCaseTaskFindAll.execute('task', dataTask)
-
+const taskFindOne = async (id:string) => {
+  const findOneParams = {
+    url: 'task',
+    token: token,
+    id: id
   }
-  if (status.value === 'doing'){
 
+  const response = await taskUseCaseFindOne.execute(findOneParams)
 
-    const dataTask = {
-      idUser: idUser,
-      token: token,
-      sort: {status: 'desc'}
-    }
+  taskFormInputRef.id = response.id
+  taskFormInputRef.task = response.task
+  taskFormInputRef.priority = response.priority
+  taskFormInputRef.status = response.status
 
-    return list.value = await useCaseTaskFindAll.execute('task', dataTask)
+  console.log(response)
+}
 
+const taskUpdate = async () => {
+  const updateParams = {
+    idUser: idUser,
+    token: token,
+    url: 'task',
+    id: taskFormInputRef.id,
+    task: taskFormInputRef.task,
+    priority: taskFormInputRef.priority,
+    status: taskFormInputRef.status,
   }
+
+  const response = await taskUseCaseUpdate.execute(updateParams)
+
+  taskFormInputRef.id = ''
+  taskFormInputRef.task = ''
+  taskFormInputRef.priority = ''
+  taskFormInputRef.status = ''
+
+  list.value = await taskList()
+
+  console.log(response)
 }
 
 const priorityOrder = async () => {
@@ -124,6 +151,7 @@ const priorityOrder = async () => {
        }
 
       return list.value = await useCaseTaskFindAll.execute('task', dataTask)
+
   }
   if (priorityOrderRef.value === true) {
     priorityOrderRef.value = false
@@ -135,32 +163,32 @@ const priorityOrder = async () => {
 
          return list.value = await useCaseTaskFindAll.execute('task', dataTask)
   }
-  // if (status.value === 'open'){
-  //
-  //   const dataTask = {
-  //     idUser: idUser,
-  //     token: token,
-  //     sort: {status: 'asc'}
-  //   }
-  //
-  //   return list.value = await useCaseTaskFindAll.execute('task', dataTask)
-  //
-  // }
-  // if (status.value === 'doing'){
-  //
-  //
-  //   const dataTask = {
-  //     idUser: idUser,
-  //     token: token,
-  //     sort: {status: 'desc'}
-  //   }
-  //
-  //   return list.value = await useCaseTaskFindAll.execute('task', dataTask)
-  //
-  // }
 }
 
+const statusOrder = async () => {
+  if (statusOrderRef.value === false) {
+    statusOrderRef.value = true
+    const dataTask = {
+      idUser: idUser,
+      token: token,
+      sort: {status: 'asc'}
+    }
 
+    return list.value = await useCaseTaskFindAll.execute('task', dataTask)
+
+  }
+  if (statusOrderRef.value === true) {
+    statusOrderRef.value = false
+    const dataTask = {
+      idUser: idUser,
+      token: token,
+      sort: {status: 'desc'}
+    }
+
+    return list.value = await useCaseTaskFindAll.execute('task', dataTask)
+
+  }
+}
 
 </script>
 
@@ -180,7 +208,7 @@ const priorityOrder = async () => {
         </button>
       </div>
 
-      <div class="divFormCreate">
+      <div class="box-form">
         <form class="FormCreate" @submit.prevent="taskCreate">
 
           <div>
@@ -217,15 +245,18 @@ const priorityOrder = async () => {
           </div>
 
 
-            <button type="submit" class="taskFormBtn">
-                Create
-            </button>
+          <button type="submit" class="taskFormBtn" v-if="!taskFormInputRef.id">
+            Create
+          </button>
+          <button type="button" class="taskFormBtn" v-if="taskFormInputRef.id" @click="taskUpdate">
+            Savar
+          </button>
 
 
         </form>
       </div>
 
-      <div class="divTaskList">
+      <div class="box-task-list">
         <table>
           <tr>
             <th>task</th>
@@ -237,26 +268,23 @@ const priorityOrder = async () => {
           </tr>
           <tr>
             <td>
-              <input placeholder="task" />
-              <button @click="taskCreate">
-                teste
-              </button>
-
+              <input
+                type="text"
+                placeholder="Buscar task"
+                v-model=searchRef
+              />
             </td>
 
             <td>
-<!--              <select id="status" v-model="priorityOrderRef">-->
-<!--                <option v-for="i in taskSelectData.priority" :key="i">{{i}}</option>-->
-<!--              </select>-->
               <button @click="priorityOrder">
                 ordenar
               </button>
             </td>
 
             <td>
-              <select id="status" v-model="status">
-                <option v-for="i in taskSelectData.status" :key="i">{{i}}</option>
-              </select>
+              <button @click="statusOrder">
+                ordenar
+              </button>
             </td>
 
 
@@ -267,7 +295,7 @@ const priorityOrder = async () => {
             <td>{{i.status}}</td>
             <td>{{i.creationDate}}</td>
             <td>
-              <button>
+              <button @click="taskFindOne(i.id)">
                 Atualizar
               </button>
               <button @click=taskDelete(i.id) >
@@ -277,9 +305,11 @@ const priorityOrder = async () => {
           </tr>
         </table>
       </div>
-
     </section>
   </div>
+
+
+
 </template>
 
 <style scoped>
@@ -336,7 +366,7 @@ h1 {
 }
 
 
-.divTaskList{
+.box-task-list{
   width: 100%;
 }
 table {

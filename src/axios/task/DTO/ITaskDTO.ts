@@ -10,6 +10,8 @@ export enum IStatus {
 }
 export interface ITaskRequestDTO {
   idUser:string
+
+  task?: string
   // priority?:IPriority
   status?:string
   // creationDate?:string
