@@ -11,7 +11,7 @@ import {taskUseCaseUpdate} from "@/axios/task/useCase/TaskUseCaseUpdate";
 
 const list= ref()
 
-
+const listFilter = ref()
 const storeUse = userStore()
 const idUser = storeUse.tokenIdGet().id as string
 const token = storeUse.tokenIdGet().token as string
@@ -40,15 +40,25 @@ onMounted(async () => {
 })
 
 watch(searchRef,async () => {
-  if (searchRef.value.length >= 3 ) {
+  if (searchRef.value.length >= 2 ) {
 
-    const dataTask = {
-      idUser: idUser,
-      token: token,
-      task: searchRef.value
-    }
+    list.value =  await list.value.filter(task => task.task.includes(searchRef.value))
 
-    list.value = await useCaseTaskFindAll.execute('task', dataTask)
+   // const teste = async () => {
+   //   return  await list.value.filter(task => task.task.includes(searchRef.value))
+   // }
+   //
+   // list.value = await teste()
+   //
+   // console.log(teste())
+
+     // const dataTask = {
+     //   idUser: idUser,
+     //   token: token,
+     //   task: searchRef.value
+     // }
+     //
+     // list.value = await useCaseTaskFindAll.execute('task', dataTask)
   }
 
   if (!searchRef.value.length) return list.value = await taskList()
