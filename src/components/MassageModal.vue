@@ -21,6 +21,7 @@ defineProps ({
   background: rgba(255, 0, 0, 0.30);
   border-radius: 5px;
   padding: 10px;
-  max-width: 400px;
+  max-width: 100%;
+  text-align: center;
 }
 </style>

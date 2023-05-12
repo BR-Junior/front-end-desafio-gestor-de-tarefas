@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SigninView from '../views/SigninView.vue'
+import SignIn from "@/views/SignIn-SignUp/SignIn.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: SigninView
+      component: SignIn
     },
     {
       path: '/sign-up',
@@ -15,18 +15,7 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/signUpView.vue')
-    },
-    {
-      meta:{
-        auth: true
-      },
-      path: '/task2',
-      name: 'task2',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/TaskView.vue')
+      component: () => import('../views/SignIn-SignUp/SignUp.vue')
     },
     {
      path: '/task',

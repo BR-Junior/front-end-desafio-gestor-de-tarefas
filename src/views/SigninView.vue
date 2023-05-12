@@ -51,7 +51,7 @@ const handleSubmit = async () => {
 
 
 
-  saveDataLogin(loginInput)
+  await saveDataLogin(loginInput)
 }
 
 </script>
