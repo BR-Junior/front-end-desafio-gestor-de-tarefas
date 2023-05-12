@@ -1,15 +1,26 @@
 <script setup lang="ts">
 import {userStore} from "@/stores/userStore";
-import {reactive} from "vue";
+import {reactive, watch} from "vue";
 import {useCaseTaskCreate} from "@/axios/task/useCase/TaskUseCaseCreate";
+import {taskUseCaseFindOne} from "@/axios/task/useCase/TaskUseCaseFindOne";
+import {taskUseCaseUpdate} from "@/axios/task/useCase/TaskUseCaseUpdate";
+
+
+
+
 
 const emit = defineEmits(['taskListReload'])
-
+// const props = defineProps(['idTask'])
+const  props = defineProps({
+  idTask: {
+    type: String,
+    default: ''
+  }
+})
 
 const storeUse = userStore()
 const idUser = storeUse.tokenIdGet().id as string
 const token = storeUse.tokenIdGet().token as string
-
 
 const taskFormInputRef = reactive({
   id: '',
@@ -17,6 +28,7 @@ const taskFormInputRef = reactive({
   priority: '',
   status: ''
 })
+
 
 const createTask = async () => {
   const taskInputForm = {
@@ -26,16 +38,58 @@ const createTask = async () => {
     priority: taskFormInputRef.priority,
     status: taskFormInputRef.status,
   }
-  emit('taskListReload', true)
+
   await useCaseTaskCreate.execute('task', taskInputForm)
 
-
+  emit('taskListReload', true)
 
   taskFormInputRef.task = ''
   taskFormInputRef.priority = ''
   taskFormInputRef.status = ''
 }
 
+const taskFindOne = async (id:string) => {
+  const findOneParams = {
+    url: 'task',
+    token: token,
+    id: id
+  }
+
+  const response = await taskUseCaseFindOne.execute(findOneParams)
+
+  taskFormInputRef.id = response.id
+  taskFormInputRef.task = response.task
+  taskFormInputRef.priority = response.priority
+  taskFormInputRef.status = response.status
+
+}
+
+watch(props, async () => {
+  await taskFindOne(props.idTask);
+})
+const taskUpdate = async () => {
+  const updateParams = {
+    idUser: idUser,
+    token: token,
+    url: 'task',
+    id: taskFormInputRef.id,
+    task: taskFormInputRef.task,
+    priority: taskFormInputRef.priority,
+    status: taskFormInputRef.status,
+  }
+
+  const response = await taskUseCaseUpdate.execute(updateParams)
+
+  emit('taskListReload', true)
+
+  taskFormInputRef.id = ''
+  taskFormInputRef.task = ''
+  taskFormInputRef.priority = ''
+  taskFormInputRef.status = ''
+
+
+  console.log(response)
+}
 
 </script>
 
@@ -72,8 +126,12 @@ const createTask = async () => {
       </div>
 
       <div class="form-fild">
-        <button type="submit" class="form-btn-create" >
+        <button type="submit" class="form-btn-create" v-if="!taskFormInputRef.id">
           Create
+        </button>
+
+        <button type="button" class="form-btn-create" @click="taskUpdate" v-if="taskFormInputRef.id">
+          Salvar
         </button>
       </div>
 
@@ -92,7 +150,6 @@ const createTask = async () => {
   margin: 1rem 0;
 }
 .task-form {
-  //width: 100%;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -103,7 +160,6 @@ const createTask = async () => {
 .form-fild {
   display: flex;
   flex-direction: column;
-
   gap: .2rem;
 }
 .form-btn-create {

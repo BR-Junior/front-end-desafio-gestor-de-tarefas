@@ -4,14 +4,20 @@ import {userStore} from "@/stores/userStore";
 import {onMounted, ref, watch} from "vue";
 import router from "@/router";
 import TaskForm from "@/views/task/TaskForm.vue";
+import {taskUseCaseDelete} from "@/axios/task/useCase/TaskUseCaseDelete";
 
 
 
 const storeUse = userStore()
 const idUser = storeUse.tokenIdGet().id as string
 const token = storeUse.tokenIdGet().token as string
-const taskListRef = ref<[]>()
-const Reload = ref<boolean>(false)
+const taskListRef = ref()
+const ReloadList = ref<boolean>(false)
+const searchTaskRef = ref<string>('')
+const priorityOrderRef = ref<boolean>(false)
+const statusOrderRef = ref<boolean>(false)
+const idTaskRef = ref<string>('')
+
 
 onMounted(async () => {
   if (!storeUse.tokenIdGet().token) {
@@ -21,8 +27,6 @@ onMounted(async () => {
   taskListRef.value = await taskList()
 
 })
-console.log(Reload)
-
 
 const taskList = async () => {
   const dataTask = {
@@ -34,49 +38,136 @@ const taskList = async () => {
 
 }
 
-watch(Reload,async () => {
+watch(ReloadList,async () => {
   taskListRef.value = await taskList()
-  console.log('AAAAAAAAAAAA')
-  Reload.value = false
-  console.log('BBBBBBB')
+  ReloadList.value = false
+
 })
-const taskListReload = async (data:boolean) => {
+const taskListReload = async (data:boolean) => ReloadList.value = data
 
-   Reload.value = data
-  console.log(Reload.value)
+watch(searchTaskRef, async () => {
+  taskListRef.value =   taskListRef.value.filter((task: { task: string | string[]; }) => task.task.includes(searchTaskRef.value))
 
-  console.log(Reload.value)
-   // return  taskListRef.value = await taskList()
-  // taskListRef.value =
-  //
+  if (!searchTaskRef.value.length)  taskListRef.value = await taskList()
+})
+
+const priorityOrder = async () => {
+  if (priorityOrderRef.value === false) {
+    priorityOrderRef.value = true
+    const dataTask = {
+      idUser: idUser,
+      token: token,
+      sort: {priority: 'desc'}
+    }
+
+    return taskListRef.value = await useCaseTaskFindAll.execute('task', dataTask)
+
+  }
+  if (priorityOrderRef.value === true) {
+    priorityOrderRef.value = false
+    const dataTask = {
+      idUser: idUser,
+      token: token,
+      sort: {priority: 'asc'}
+    }
+
+    return taskListRef.value = await useCaseTaskFindAll.execute('task', dataTask)
+  }
+}
+
+const statusOrder = async () => {
+  if (statusOrderRef.value === false) {
+    statusOrderRef.value = true
+    const dataTask = {
+      idUser: idUser,
+      token: token,
+      sort: {status: 'desc'}
+    }
+
+    return taskListRef.value = await useCaseTaskFindAll.execute('task', dataTask)
+
+  }
+  if (statusOrderRef.value === true) {
+    statusOrderRef.value = false
+    const dataTask = {
+      idUser: idUser,
+      token: token,
+      sort: {status: 'asc'}
+    }
+
+    return taskListRef.value = await useCaseTaskFindAll.execute('task', dataTask)
+
+  }
+}
+
+const getIdTask = (id:string) => {
+  return  idTaskRef.value = id
+}
+
+const taskDelete = async (id:string) => {
+  const deleteParams = {
+    url: 'task',
+    token: token,
+    id: id
+  }
+  await taskUseCaseDelete.execute(deleteParams)
+
+  taskListRef.value = await taskList()
 }
 </script>
 
 <template>
   <section class="section-task-list">
-    <TaskForm @taskListReload="taskListReload"/>
+    <TaskForm
+      @taskListReload="taskListReload"
+      :idTask=idTaskRef
+    />
 
-    <ul class="task-list">
-      <div class="list-header">
+    <ul class="task-list" >
+      <li class="list-header">
         <div class="header-task">task</div>
         <div class="header-priority">priority</div>
         <div class="header-status">status</div>
-        <div  class="header-creationDate">creationDate</div>
-      </div>
+        <div  class="header-creationDate">creationDate</div >
+      </li>
 
       <hr class="hr">
 
-      <div class="list-filter">
-        <div class="filter-task">task</div>
-        <div class="filter-priority">priority</div>
-        <div class="filter-status">status</div>
-      </div>
+      <li class="list-filter">
+        <div class="filter-task">
+          <input
+              type="text"
+              placeholder="search task"
+              v-model="searchTaskRef"
+          />
+        </div>
+
+        <div class="filter-priority">
+          <button class="btn-filter-priority" @click="priorityOrder">
+            order priority
+          </button>
+        </div>
+
+        <div class="filter-status">
+          <button class="btn-filter-status" @click="statusOrder">
+            order status
+          </button>
+        </div>
+      </li>
 
       <li  class="list-fild" v-for="task in taskListRef" :key="task.id">
         <div>{{task.task}}</div>
         <div>{{task.priority}}</div>
         <div>{{task.status}}</div>
         <div>{{task.creationDate}}</div>
+        <div>
+          <button class="btn-task-update" @click="getIdTask(task.id)">
+            update
+          </button>
+          <button class="btn-task-delete" @click="taskDelete(task.id)">
+            delete
+          </button>
+        </div>
       </li>
 
 
@@ -102,9 +193,6 @@ const taskListReload = async (data:boolean) => {
 .task-list li {
   justify-content: center;
 }
-
-
-
 .list-header, .list-filter{
   display: flex;
   justify-content: center;
@@ -113,20 +201,19 @@ const taskListReload = async (data:boolean) => {
 }
 .filter-task, .header-task{
   position: absolute;
-  left: 10%;
+  left: 0;
   width: 20%;
   text-align: center;
 }
 .header-priority, .filter-priority {
-  width: 20%;
   position: absolute;
-  left: 30%;
+  left: 20%;
   width: 20%;
   text-align: center;
 }
 .header-status, .filter-status {
   position: absolute;
-  left: 50%;
+  left: 40%;
   width: 20%;
   text-align: center;
 }
@@ -147,5 +234,27 @@ const taskListReload = async (data:boolean) => {
   display: flex;
   justify-content: center;
 }
+.btn-filter-priority, .btn-filter-status {
+  cursor: pointer;
+  padding: .2rem;
+  background: transparent;
+  border: solid 1px rgba(26, 98, 205, 0.6);
+}
+.btn-task-update, .btn-task-delete {
+  padding: .5rem;
+  width: 5rem;
+  margin: 0 1rem;
+  border: none;
+  cursor: pointer;
+}
+.btn-task-update {
+  background: rgba(44, 185, 77, 0.60);
+}
+.btn-task-delete {
+  background: rgb(231, 82, 82);
+}
+
+
+
 
 </style>
