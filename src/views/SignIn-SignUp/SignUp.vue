@@ -1,41 +1,49 @@
 <script setup lang="ts">
-import {reactive, ref} from "vue";
-import {useCaseLogin} from "@/axios/login/useCase/UseCaseLogin";
-import {userStore} from "@/stores/userStore";
+import {reactive} from "vue";
+import {signUpUseCase} from "@/axios/signUp/useCase";
 import router from "@/router";
 import MassageModal from "@/components/MassageModal.vue";
 
-const msg = ref<string>('')
 
-const signInInputRef = reactive({
+const msg = reactive({
+  name: '',
+  email: '',
+  password: '',
+  success: '',
+})
+
+
+const signUpInputRef = reactive({
+  name: '',
   email: '',
   password: '',
 })
 
+
 const handleSubmit = async () => {
-  const signInInput = {
-    email: signInInputRef.email,
-    password: signInInputRef.password
+  const signUpInput = {
+    name: signUpInputRef.name,
+    email: signUpInputRef.email,
+    password: signUpInputRef.password
   }
 
-  const response = await useCaseLogin.execute('entrar', signInInput)
+  const response = await signUpUseCase.execute('cadastrar', signUpInput)
+
 
   if (!response.id) {
+    if (response.name) msg.name = response.name
+    setTimeout(() => msg.name = '', 3000)
 
-    setTimeout(() => msg.value = '', 3000)
+    if (response.email) msg.email = response.email
+    setTimeout(() => msg.email = '', 3000)
 
-    return msg.value = `${response}`
+    if (response.password) msg.password = response.password
+    setTimeout(() => msg.password = '', 3000)
 
   } else {
+    msg.success = 'Cadastro foito com sucesso'
 
-    const storeUse = userStore()
-
-    storeUse.id = response.id
-    storeUse.token = response.token
-    storeUse.tokenIdSave()
-
-    return router.push('/task')
-
+    return setTimeout(() => router.push('/'), 3000)
   }
 }
 </script>
@@ -43,19 +51,31 @@ const handleSubmit = async () => {
 <template>
   <section class="section-sign-in">
     <h1>
-      Sign in
+      Sign up
     </h1>
     <hr class="hr">
 
     <form class="signin-form" @submit.prevent="handleSubmit">
-      <MassageModal :msg=msg v-show=msg />
+      <MassageModal :msg=msg.success v-show=msg.success style="background: rgba(117, 218, 117, 0.8)"/>
+      <MassageModal :msg=msg.name v-show=msg.name />
+      <MassageModal :msg=msg.email v-show=msg.email style="margin: 1rem"/>
+      <MassageModal :msg=msg.password v-show=msg.password />
+      <label for="name">Name</label>
+      <input
+          id="name"
+          name="name"
+          type="text"
+          placeholder="name"
+          v-model="signUpInputRef.name"
+      />
+
       <label for="email">E-mail</label>
       <input
           id="email"
           name="email"
           type="email"
           placeholder="E-mail"
-          v-model="signInInputRef.email"
+          v-model="signUpInputRef.email"
       />
 
       <label for="password">Password</label>
@@ -64,15 +84,15 @@ const handleSubmit = async () => {
           name="password"
           type="password"
           placeholder="Password"
-          v-model="signInInputRef.password"
+          v-model="signUpInputRef.password"
       />
 
       <button type="submit" class="form-btn-sign-in">
-        Sign in
+        Save
       </button>
 
-      <button type="button" class="form-btn-sign-up" @click="router.push('/sign-up')">
-        Sign up
+      <button type="button" @click="router.push('/')" class="form-btn-sign-up">
+        Back
       </button>
     </form>
   </section>
@@ -85,7 +105,7 @@ const handleSubmit = async () => {
   align-items: center;
   margin-top: 10rem;
   width: 100%;
-  min-height: 500px;
+  height: 100%;
   border: solid 1px rgba(0, 0, 0, .5);
   backdrop-filter: blur(20px);
   box-shadow: 0 0 30px rgba(0, 0, 0, .5);
@@ -96,12 +116,11 @@ const handleSubmit = async () => {
 }
 .signin-form {
   width: 500px;
-  height: 350px;
   display: flex;
   flex-direction: column;
-  margin: auto auto;
+  margin: 5rem auto;
 }
-#email, #password,
+#name, #email, #password,
 .form-btn-sign-in, .form-btn-sign-up {
   margin: .5rem 0;
   padding: .5rem;
