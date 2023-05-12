@@ -4,6 +4,8 @@ import {useCaseLogin} from "@/axios/login/useCase/UseCaseLogin";
 import {userStore} from "@/stores/userStore";
 import router from "@/router";
 import MassageModal from "@/components/MassageModal.vue";
+import {http} from "@/help";
+
 
 const msg = ref<string>('')
 
@@ -18,7 +20,8 @@ const handleSubmit = async () => {
     password: signInInputRef.password
   }
 
-  const response = await useCaseLogin.execute('entrar', signInInput)
+  // const response = await useCaseLogin.execute('entrar', signInInput)
+  const response = await http.signIn(signInInput)
 
   if (!response.id) {
 
@@ -55,6 +58,7 @@ const handleSubmit = async () => {
           name="email"
           type="email"
           placeholder="E-mail"
+          required
           v-model="signInInputRef.email"
       />
 
@@ -64,6 +68,7 @@ const handleSubmit = async () => {
           name="password"
           type="password"
           placeholder="Password"
+          required
           v-model="signInInputRef.password"
       />
 
