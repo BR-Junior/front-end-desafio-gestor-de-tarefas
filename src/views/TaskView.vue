@@ -7,6 +7,8 @@ import {useCaseTaskCreate} from "@/axios/task/useCase/TaskUseCaseCreate";
 import {taskUseCaseDelete} from "@/axios/task/useCase/TaskUseCaseDelete";
 import {taskUseCaseFindOne} from "@/axios/task/useCase/TaskUseCaseFindOne";
 import {taskUseCaseUpdate} from "@/axios/task/useCase/TaskUseCaseUpdate";
+import TaskForm from "@/views/task/TaskForm.vue";
+import TaskList from "@/views/task/TaskList.vue";
 
 
 const list= ref()
@@ -217,6 +219,8 @@ const statusOrder = async () => {
           Voltar
         </button>
       </div>
+
+       <TaskList />
 
       <div class="box-form">
         <form class="FormCreate" @submit.prevent="taskCreate">

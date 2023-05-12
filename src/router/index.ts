@@ -27,6 +27,14 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/TaskView.vue')
+    },
+    {
+     path: '/task2',
+     name: 'task2',
+     // route level code-splitting
+     // this generates a separate chunk (About.[hash].js) for this route
+     // which is lazy-loaded when the route is visited.
+     component: () => import('../views/task/TaskList.vue')
     }
   ]
 })
