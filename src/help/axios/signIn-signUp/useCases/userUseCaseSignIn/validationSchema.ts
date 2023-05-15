@@ -1,5 +1,5 @@
 import * as yup from 'yup'
-import type {IUserUseCaseSignIn} from "@/help/axios/SignIn-SignUp/useCases/userUseCaseSignIn/IUserUseCaseSignIn";
+import type {IUserUseCaseSignIn} from "@/help/axios/signIn-signUp/useCases/userUseCaseSignIn/IUserUseCaseSignIn";
 
 
 export const schema: yup.ObjectSchema<IUserUseCaseSignIn.Params> = yup.object().shape({

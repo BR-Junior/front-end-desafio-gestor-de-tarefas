@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {useCaseTaskFindAll} from "@/axios/task/useCase/TaskUseCaseFindAll";
 import {userStore} from "@/stores/userStore";
 import {onMounted, ref, watch} from "vue";
 import router from "@/router";
@@ -26,8 +25,6 @@ onMounted(async () => {
   }
 
   taskListRef.value = await taskList()
-  console.log(taskListRef.value)
-
 })
 
 const taskList = async () => {
@@ -36,14 +33,12 @@ const taskList = async () => {
     token: token,
   }
 
-  // return  await useCaseTaskFindAll.execute('task', dataTask)
-
   return await http.getAll(dataTask)
-
 }
 
 watch(ReloadList,async () => {
   taskListRef.value = await taskList()
+  idTaskRef.value = ''
   ReloadList.value = false
 
 })
@@ -64,7 +59,7 @@ const priorityOrder = async () => {
       sort: {priority: 'desc'}
     }
 
-    return taskListRef.value = await useCaseTaskFindAll.execute('task', dataTask)
+    return taskListRef.value = await http.getAll(dataTask)
 
   }
   if (priorityOrderRef.value === true) {
@@ -75,7 +70,7 @@ const priorityOrder = async () => {
       sort: {priority: 'asc'}
     }
 
-    return taskListRef.value = await useCaseTaskFindAll.execute('task', dataTask)
+    return taskListRef.value = await http.getAll(dataTask)
   }
 }
 
@@ -88,7 +83,7 @@ const statusOrder = async () => {
       sort: {status: 'desc'}
     }
 
-    return taskListRef.value = await useCaseTaskFindAll.execute('task', dataTask)
+    return taskListRef.value = await http.getAll(dataTask)
 
   }
   if (statusOrderRef.value === true) {
@@ -99,7 +94,7 @@ const statusOrder = async () => {
       sort: {status: 'asc'}
     }
 
-    return taskListRef.value = await useCaseTaskFindAll.execute('task', dataTask)
+    return taskListRef.value = await http.getAll(dataTask)
 
   }
 }

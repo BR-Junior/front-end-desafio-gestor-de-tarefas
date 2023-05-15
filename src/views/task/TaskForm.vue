@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import {userStore} from "@/stores/userStore";
 import {reactive, watch} from "vue";
-import {useCaseTaskCreate} from "@/axios/task/useCase/TaskUseCaseCreate";
 import {taskUseCaseFindOne} from "@/axios/task/useCase/TaskUseCaseFindOne";
 import {taskUseCaseUpdate} from "@/axios/task/useCase/TaskUseCaseUpdate";
+import {http} from "@/help";
+import MassageModal from "@/components/MassageModal.vue";
 
 
 
 
 
 const emit = defineEmits(['taskListReload'])
-// const props = defineProps(['idTask'])
 const  props = defineProps({
   idTask: {
     type: String,
@@ -28,8 +28,23 @@ const taskFormInputRef = reactive({
   priority: '',
   status: ''
 })
+const msg = reactive({
+  task: '',
+  priority: '',
+  status: '',
+})
+const errors = (data:any) => {
+  const {task, priority, status} = data.errors
 
+  setTimeout(() => msg.task = '', 3000)
+  msg.task = task
 
+  setTimeout(() => msg.priority = '', 3000)
+  msg.priority = priority
+
+  setTimeout(() => msg.status = '', 3000)
+  msg.status = status
+}
 const createTask = async () => {
   const taskInputForm = {
     token: token,
@@ -39,7 +54,9 @@ const createTask = async () => {
     status: taskFormInputRef.status,
   }
 
-  await useCaseTaskCreate.execute('task', taskInputForm)
+  const result = await http.post(taskInputForm)
+
+  if (result.errors) return errors(result)
 
   emit('taskListReload', true)
 
@@ -95,6 +112,9 @@ const taskUpdate = async () => {
 
 <template>
   <section class="section-task-form">
+    <MassageModal :msg="msg.task" v-show="msg.task"/>
+    <MassageModal :msg="msg.priority" v-show="msg.priority"/>
+    <MassageModal :msg="msg.status" v-show="msg.status"/>
 
     <form class="task-form" @submit.prevent="createTask">
 

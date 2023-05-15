@@ -1,4 +1,4 @@
-import type {IUserUseCaseSignUp} from "@/help/axios/SignIn-SignUp/useCases/userUseCaseSignUp/IUserUseCaseSignUp";
+import type {IUserUseCaseSignUp} from "@/help/axios/signIn-signUp/useCases/userUseCaseSignUp/IUserUseCaseSignUp";
 
 
 export class UserUseCaseSignUp implements IUserUseCaseSignUp{

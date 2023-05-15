@@ -1,7 +1,7 @@
 import axios from "axios";
 import type {AxiosInstance} from "axios";
-import type {IUserUseCaseSignIn} from "@/help/axios/SignIn-SignUp/useCases/userUseCaseSignIn/IUserUseCaseSignIn";
-import type {IUserUseCaseSignUp} from "@/help/axios/SignIn-SignUp/useCases/userUseCaseSignUp/IUserUseCaseSignUp";
+import type {IUserUseCaseSignIn} from "@/help/axios/signIn-signUp/useCases/userUseCaseSignIn/IUserUseCaseSignIn";
+import type {IUserUseCaseSignUp} from "@/help/axios/signIn-signUp/useCases/userUseCaseSignUp/IUserUseCaseSignUp";
 
 export const http:AxiosInstance = axios.create({
   baseURL: 'http://localhost:3333/',
