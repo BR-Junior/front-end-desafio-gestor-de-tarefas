@@ -2,7 +2,6 @@
 import {userStore} from "@/stores/userStore";
 import {reactive, watch} from "vue";
 import {taskUseCaseFindOne} from "@/axios/task/useCase/TaskUseCaseFindOne";
-import {taskUseCaseUpdate} from "@/axios/task/useCase/TaskUseCaseUpdate";
 import {http} from "@/help";
 import MassageModal from "@/components/MassageModal.vue";
 
@@ -88,14 +87,16 @@ const taskUpdate = async () => {
   const updateParams = {
     idUser: idUser,
     token: token,
-    url: 'task',
     id: taskFormInputRef.id,
     task: taskFormInputRef.task,
     priority: taskFormInputRef.priority,
     status: taskFormInputRef.status,
   }
 
-  const response = await taskUseCaseUpdate.execute(updateParams)
+  // const response = await taskUseCaseUpdate.execute(updateParams)
+  const result = await http.put(updateParams)
+
+  if (result.errors) return errors(result)
 
   emit('taskListReload', true)
 
@@ -103,9 +104,6 @@ const taskUpdate = async () => {
   taskFormInputRef.task = ''
   taskFormInputRef.priority = ''
   taskFormInputRef.status = ''
-
-
-  console.log(response)
 }
 
 </script>
