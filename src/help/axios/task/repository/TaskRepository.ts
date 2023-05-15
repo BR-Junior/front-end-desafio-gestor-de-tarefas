@@ -1,6 +1,6 @@
 import axios from "axios";
 import type {AxiosInstance} from "axios";
-import type {ITaskUseCasesGetAll} from "@/help/axios/task/useCases/taskUseCasesGetAll/ITaskUseCasesGetAll";
+import type {ITaskUseCaseGetAll} from "@/help/axios/task/useCases/taskUseCaseGetAll/ITaskUseCaseGetAll";
 import type {ITaskUseCasePost} from "@/help/axios/task/useCases/taskUseCasePost/ITaskUseCasePost";
 import type {ITaskUseCasePut} from "@/help/axios/task/useCases/taskUseCasePut/ITaskUseCasePut";
 import type {ITaskUseCaseGet} from "@/help/axios/task/useCases/taskUseCaseGet/ITaskUseCaseGet";
@@ -12,14 +12,14 @@ export const http:AxiosInstance = axios.create({
 })
 
 export class TaskRepository implements
-  ITaskUseCasesGetAll,
+  ITaskUseCaseGetAll,
   ITaskUseCasePost,
   ITaskUseCasePut,
   ITaskUseCaseGet,
   ITaskUseCaseDelete {
   private repoHttp = http
 
-  async getAll(params:ITaskUseCasesGetAll.Params): Promise<ITaskUseCasesGetAll.Result> {
+  async getAll(params:ITaskUseCaseGetAll.Params): Promise<ITaskUseCaseGetAll.Result> {
     return await this.repoHttp.get('task', {
       headers: {Authorization: params.token},
       params: params

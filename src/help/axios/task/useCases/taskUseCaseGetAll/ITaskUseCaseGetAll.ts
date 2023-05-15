@@ -1,7 +1,7 @@
-export interface ITaskUseCasesGetAll {
-  getAll(params: ITaskUseCasesGetAll.Params): Promise<ITaskUseCasesGetAll.Result>
+export interface ITaskUseCaseGetAll {
+  getAll(params: ITaskUseCaseGetAll.Params): Promise<ITaskUseCaseGetAll.Result>
 }
-export namespace ITaskUseCasesGetAll {
+export namespace ITaskUseCaseGetAll {
   export type Params = {
     idUser: string
     token: string
