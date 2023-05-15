@@ -3,6 +3,7 @@ import type {AxiosInstance} from "axios";
 import type {ITaskUseCasesGetAll} from "@/help/axios/task/useCases/taskUseCasesGetAll/ITaskUseCasesGetAll";
 import type {ITaskUseCasePost} from "@/help/axios/task/useCases/taskUseCasePost/ITaskUseCasePost";
 import type {ITaskUseCasePut} from "@/help/axios/task/useCases/taskUseCasePut/ITaskUseCasePut";
+import type {ITaskUseCaseGet} from "@/help/axios/task/useCases/taskUseCaseGet/ITaskUseCaseGet";
 
 
 export const http:AxiosInstance = axios.create({
@@ -12,7 +13,8 @@ export const http:AxiosInstance = axios.create({
 export class TaskRepository implements
   ITaskUseCasesGetAll,
   ITaskUseCasePost,
-  ITaskUseCasePut {
+  ITaskUseCasePut,
+  ITaskUseCaseGet {
   private repoHttp = http
 
   async getAll(params:ITaskUseCasesGetAll.Params): Promise<ITaskUseCasesGetAll.Result> {
@@ -35,6 +37,13 @@ export class TaskRepository implements
     const {token, id, ...newParams} = params
     return await this.repoHttp.put(`task/${id}`, newParams, {
       headers: {Authorization: token}
+    }).then(response => response.data)
+      .catch(error => error.response)
+  }
+
+  async get(params: ITaskUseCaseGet.Params): Promise<ITaskUseCaseGet.Result> {
+    return await this.repoHttp.get(`task/${params.id}`,{
+      headers: {Authorization: params.token}
     }).then(response => response.data)
       .catch(error => error.response)
   }

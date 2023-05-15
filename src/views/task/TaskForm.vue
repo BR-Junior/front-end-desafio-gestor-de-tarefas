@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {userStore} from "@/stores/userStore";
 import {reactive, watch} from "vue";
-import {taskUseCaseFindOne} from "@/axios/task/useCase/TaskUseCaseFindOne";
 import {http} from "@/help";
 import MassageModal from "@/components/MassageModal.vue";
 
@@ -71,7 +70,7 @@ const taskFindOne = async (id:string) => {
     id: id
   }
 
-  const response = await taskUseCaseFindOne.execute(findOneParams)
+  const response = await http.get(findOneParams)
 
   taskFormInputRef.id = response.id
   taskFormInputRef.task = response.task
