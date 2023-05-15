@@ -23,6 +23,7 @@ const handleSubmit = async () => {
   // const response = await useCaseLogin.execute('entrar', signInInput)
   const response = await http.signIn(signInInput)
 
+  if (response.errors) return alert('teste de Erro')
   if (!response.id) {
 
     setTimeout(() => msg.value = '', 3000)
@@ -58,7 +59,7 @@ const handleSubmit = async () => {
           name="email"
           type="email"
           placeholder="E-mail"
-          required
+
           v-model="signInInputRef.email"
       />
 
@@ -68,7 +69,7 @@ const handleSubmit = async () => {
           name="password"
           type="password"
           placeholder="Password"
-          required
+
           v-model="signInInputRef.password"
       />
 
