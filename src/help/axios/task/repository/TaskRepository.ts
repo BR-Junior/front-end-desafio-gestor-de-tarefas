@@ -4,6 +4,7 @@ import type {ITaskUseCasesGetAll} from "@/help/axios/task/useCases/taskUseCasesG
 import type {ITaskUseCasePost} from "@/help/axios/task/useCases/taskUseCasePost/ITaskUseCasePost";
 import type {ITaskUseCasePut} from "@/help/axios/task/useCases/taskUseCasePut/ITaskUseCasePut";
 import type {ITaskUseCaseGet} from "@/help/axios/task/useCases/taskUseCaseGet/ITaskUseCaseGet";
+import type {ITaskUseCaseDelete} from "@/help/axios/task/useCases/taskUseCaseDelete/ITaskUseCaseDelete";
 
 
 export const http:AxiosInstance = axios.create({
@@ -14,7 +15,8 @@ export class TaskRepository implements
   ITaskUseCasesGetAll,
   ITaskUseCasePost,
   ITaskUseCasePut,
-  ITaskUseCaseGet {
+  ITaskUseCaseGet,
+  ITaskUseCaseDelete {
   private repoHttp = http
 
   async getAll(params:ITaskUseCasesGetAll.Params): Promise<ITaskUseCasesGetAll.Result> {
@@ -48,4 +50,9 @@ export class TaskRepository implements
       .catch(error => error.response)
   }
 
+  async delete(params: ITaskUseCaseDelete.Params): Promise<ITaskUseCaseDelete.Result> {
+    return await this.repoHttp.delete(`task/${params.id}`, {
+      headers: {Authorization: params.token}
+    }).catch(error => error.response)
+  }
 }

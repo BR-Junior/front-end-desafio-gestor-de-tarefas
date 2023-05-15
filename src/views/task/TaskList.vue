@@ -3,7 +3,6 @@ import {userStore} from "@/stores/userStore";
 import {onMounted, ref, watch} from "vue";
 import router from "@/router";
 import TaskForm from "@/views/task/TaskForm.vue";
-import {taskUseCaseDelete} from "@/axios/task/useCase/TaskUseCaseDelete";
 import {http} from "@/help";
 
 
@@ -109,7 +108,8 @@ const taskDelete = async (id:string) => {
     token: token,
     id: id
   }
-  await taskUseCaseDelete.execute(deleteParams)
+  // await taskUseCaseDelete.execute(deleteParams)
+  await http.exclude(deleteParams)
 
   taskListRef.value = await taskList()
 }
