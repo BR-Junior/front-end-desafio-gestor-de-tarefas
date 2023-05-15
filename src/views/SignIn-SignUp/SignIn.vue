@@ -23,7 +23,6 @@ const handleSubmit = async () => {
   // const response = await useCaseLogin.execute('entrar', signInInput)
   const response = await http.signIn(signInInput)
 
-  if (response.errors) return alert('teste de Erro')
   if (!response.id) {
 
     setTimeout(() => msg.value = '', 3000)
