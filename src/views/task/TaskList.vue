@@ -5,6 +5,7 @@ import {onMounted, ref, watch} from "vue";
 import router from "@/router";
 import TaskForm from "@/views/task/TaskForm.vue";
 import {taskUseCaseDelete} from "@/axios/task/useCase/TaskUseCaseDelete";
+import {http} from "@/help";
 
 
 
@@ -25,6 +26,7 @@ onMounted(async () => {
   }
 
   taskListRef.value = await taskList()
+  console.log(taskListRef.value)
 
 })
 
@@ -34,7 +36,9 @@ const taskList = async () => {
     token: token,
   }
 
-  return  await useCaseTaskFindAll.execute('task', dataTask)
+  // return  await useCaseTaskFindAll.execute('task', dataTask)
+
+  return await http.getAll(dataTask)
 
 }
 
