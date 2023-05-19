@@ -3,8 +3,8 @@ import type {IUserUseCaseSignIn} from "@/help/axios/signIn-signUp/useCases/userU
 
 
 export const schema: yup.ObjectSchema<IUserUseCaseSignIn.Params> = yup.object().shape({
-  email: yup.string().email('campo obrigatorio email').required('campo obrigatorio email'),
-  password: yup.string().required('campo obrigatorio senha')
+  email: yup.string().email('email obrigatório').required('email obrigatório'),
+  password: yup.string().required('senha obrigatório')
 })
 
 

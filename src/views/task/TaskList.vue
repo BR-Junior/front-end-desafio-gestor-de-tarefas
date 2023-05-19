@@ -12,7 +12,7 @@ const idUser = storeUse.tokenIdGet().id as string
 const token = storeUse.tokenIdGet().token as string
 const taskListRef = ref()
 const ReloadList = ref<boolean>(false)
-const searchTaskRef = ref<string>('')
+const searchTaskRef = ref()
 const priorityOrderRef = ref<boolean>(false)
 const statusOrderRef = ref<boolean>(false)
 const idTaskRef = ref<string>('')
@@ -44,6 +44,7 @@ watch(ReloadList,async () => {
 const taskListReload = async (data:boolean) => ReloadList.value = data
 
 watch(searchTaskRef, async () => {
+  console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAa')
   taskListRef.value =   taskListRef.value.filter((task: { task: string | string[]; }) => task.task.includes(searchTaskRef.value))
 
   if (!searchTaskRef.value.length)  taskListRef.value = await taskList()
@@ -55,7 +56,7 @@ const priorityOrder = async () => {
     const dataTask = {
       idUser: idUser,
       token: token,
-      sort: {priority: 'desc'}
+      priority: 'desc'
     }
 
     return taskListRef.value = await http.getAll(dataTask)
@@ -66,7 +67,7 @@ const priorityOrder = async () => {
     const dataTask = {
       idUser: idUser,
       token: token,
-      sort: {priority: 'asc'}
+      priority: 'asc'
     }
 
     return taskListRef.value = await http.getAll(dataTask)
@@ -79,7 +80,7 @@ const statusOrder = async () => {
     const dataTask = {
       idUser: idUser,
       token: token,
-      sort: {status: 'desc'}
+      status: 'desc'
     }
 
     return taskListRef.value = await http.getAll(dataTask)
@@ -90,7 +91,7 @@ const statusOrder = async () => {
     const dataTask = {
       idUser: idUser,
       token: token,
-      sort: {status: 'asc'}
+      status: 'asc'
     }
 
     return taskListRef.value = await http.getAll(dataTask)
@@ -108,7 +109,6 @@ const taskDelete = async (id:string) => {
     token: token,
     id: id
   }
-  // await taskUseCaseDelete.execute(deleteParams)
   await http.exclude(deleteParams)
 
   taskListRef.value = await taskList()
@@ -218,7 +218,7 @@ const taskDelete = async (id:string) => {
 }
 .header-creationDate {
   position: absolute;
-  left: 70%;
+  left: 60%;
   width: 20%;
   text-align: center;
 }

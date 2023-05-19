@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue";
-import {useCaseLogin} from "@/axios/login/useCase/UseCaseLogin";
 import {userStore} from "@/stores/userStore";
 import router from "@/router";
 import MassageModal from "@/components/MassageModal.vue";
@@ -27,7 +26,14 @@ const handleSubmit = async () => {
 
     setTimeout(() => msg.value = '', 3000)
 
-    return msg.value = `${response}`
+    if (response.errors) {
+      const {email='', password=''} = response.errors
+
+      return msg.value = `${email} ${password}`
+    }
+
+    if (response.data) return msg.value = `${response.data}`
+
 
   } else {
 

@@ -5,7 +5,9 @@ export namespace ITaskUseCaseGetAll {
   export type Params = {
     idUser: string
     token: string
-    sort?: {}
+    priority?: string
+    status?: string
+
   }
   export type Result = {
     id: string

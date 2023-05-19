@@ -36,8 +36,8 @@ export class TaskRepository implements
   }
 
   async put(params: ITaskUseCasePut.Params): Promise<ITaskUseCasePut.Result> {
-    const {token, id, ...newParams} = params
-    return await this.repoHttp.put(`task/${id}`, newParams, {
+    const {token, ...newParams} = params
+    return await this.repoHttp.put(`task/${newParams.id}`, newParams, {
       headers: {Authorization: token}
     }).then(response => response.data)
       .catch(error => error.response)

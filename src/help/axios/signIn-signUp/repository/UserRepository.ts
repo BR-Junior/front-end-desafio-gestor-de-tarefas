@@ -15,12 +15,12 @@ export class UserRepository implements
   async signIn(params: IUserUseCaseSignIn.Params): Promise<IUserUseCaseSignIn.Return> {
     return await this.repoHttp.post('entrar', params)
       .then(response => response.data)
-      .catch(error => error.response.data.error.message)
+      .catch(error => error.response)
   }
 
   async signUp(params: IUserUseCaseSignUp.Params): Promise<IUserUseCaseSignUp.Result> {
     return await this.repoHttp.post('cadastrar', params)
       .then(response => response.data)
-      .catch(error => error.response.data.errors.body)
+      .catch(error => error.response.data.errors)
   }
 }
