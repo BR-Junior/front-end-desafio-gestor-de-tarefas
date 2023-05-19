@@ -3,7 +3,8 @@ import {userStore} from "@/stores/userStore";
 import {onMounted, ref, watch} from "vue";
 import router from "@/router";
 import TaskForm from "@/views/task/TaskForm.vue";
-import {http} from "@/help";
+import {http} from "@/@core/help";
+import {search} from "@/@core/help/axios/task/useCases/taskUseCaseSearch";
 
 
 
@@ -45,7 +46,13 @@ const taskListReload = async (data:boolean) => ReloadList.value = data
 
 watch(searchTaskRef, async () => {
   console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAa')
-  taskListRef.value =   taskListRef.value.filter((task: { task: string | string[]; }) => task.task.includes(searchTaskRef.value))
+  // taskListRef.value =   taskListRef.value.filter((task: { task: string | string[]; }) => task.task.includes(searchTaskRef.value))
+  const searchParams = {
+    token: token,
+    idUser: idUser,
+    task: searchTaskRef.value
+  }
+  taskListRef.value = await search(searchParams)
 
   if (!searchTaskRef.value.length)  taskListRef.value = await taskList()
 })

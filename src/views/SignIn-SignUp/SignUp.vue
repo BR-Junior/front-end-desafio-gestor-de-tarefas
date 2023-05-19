@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import {reactive} from "vue";
-import {signUpUseCase} from "@/axios/signUp/useCase";
 import router from "@/router";
 import MassageModal from "@/components/MassageModal.vue";
-import {http} from "@/help";
+import {http} from "@/@core/help";
 
 
 const msg = reactive({

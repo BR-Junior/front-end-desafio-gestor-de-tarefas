@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {userStore} from "@/stores/userStore";
 import {reactive, watch} from "vue";
-import {http} from "@/help";
+import {http} from "@/@core/help";
 import MassageModal from "@/components/MassageModal.vue";
 
 
