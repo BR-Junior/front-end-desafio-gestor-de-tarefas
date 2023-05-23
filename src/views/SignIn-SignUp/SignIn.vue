@@ -3,7 +3,7 @@ import {reactive, ref} from "vue";
 import {userStore} from "@/stores/userStore";
 import router from "@/router";
 import MassageModal from "@/components/MassageModal.vue";
-import {http} from "@/help";
+import {http} from "@/@core/help";
 
 
 const msg = ref<string>('')
