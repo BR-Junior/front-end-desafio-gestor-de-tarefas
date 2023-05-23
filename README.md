@@ -76,6 +76,12 @@ yarn dev
 
 ### Execute testes de ponta a ponta com [Cypress](https://www.cypress.io/)
 
+Obs: Para rodar os testes end-to-end o back-end deve estar rodando e o projeto front-end também.
+
+```sh
+yarn dev
+```
+
 ```sh
 yarn test:e2e:dev
 ```
