@@ -45,7 +45,6 @@ watch(ReloadList,async () => {
 const taskListReload = async (data:boolean) => ReloadList.value = data
 
 watch(searchTaskRef, async () => {
-  console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAa')
   // taskListRef.value =   taskListRef.value.filter((task: { task: string | string[]; }) => task.task.includes(searchTaskRef.value))
   const searchParams = {
     token: token,
