@@ -1,68 +1,91 @@
-# front-end-desafio-gestor-de-tarefas
+# Front-end Desafio Gestor de Tarefas
 
-This template should help get you started developing with Vue 3 in Vite.
+Este repositório contém o código-fonte para um desafio de front-end do Gestor de Tarefas. O objetivo do projeto é criar a interface de usuário para gerenciar tarefas em uma aplicação web.
 
-## Recommended IDE Setup
+## Funcionalidades
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- Cadastrar um novo usuário.
+- Login de usuário.
+- Visualizar a lista de tarefas cadastradas.
+- Criar uma nova tarefa, fornecendo um título, o status e a prioridade.
+- Editar os detalhes de uma tarefa existente.
+- Excluir uma tarefa.
 
-## Type Support for `.vue` Imports in TS
+## Pré-requisitos
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+Antes de começar, certifique-se de ter o seguinte instalado em sua máquina:
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+- Node.js (versão 14 ou superior)
+- Vue.js
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+## Tecnologias usadas no projeto
 
-## Customize configuration
+- Vue
+- Vue-router
+- Pinia
+- Axios
+- Yup
+- Cypress
+- Node.js
+- TypeScript
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Instalação
 
-## Project Setup
+Siga as etapas abaixo para configurar e executar o projeto em seu ambiente local:
+
+1. Clone o repositório:
+
+```shell
+git clone https://github.com/BR-Junior/front-end-desafio-gestor-de-tarefas.git
+```
+
+2. Navegue até o diretório do projeto:
+
+```shell
+cd front-end-desafio-gestor-de-tarefas
+```
+
+3. Instale as dependências do projeto usando o Yarn:
+
+```shell
+yarn install
+```
+
+## Execução
+
+Após a conclusão da instalação e configuração, você pode executar o projeto com o seguinte comando:
+
+```shell
+yarn run dev
+```
+
+Isso iniciará o servidor de desenvolvimento e a aplicação estará disponível no seguinte endereço: [http://localhost:5174](http://localhost:5174).
+
+
+## Configuração do projeto
 
 ```sh
 yarn
 ```
 
-### Compile and Hot-Reload for Development
+### Compilar e atualizar para desenvolvimento
 
 ```sh
 yarn dev
 ```
 
-### Type-Check, Compile and Minify for Production
-
-```sh
-yarn build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-yarn test:unit
-```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+### Execute testes de ponta a ponta com [Cypress](https://www.cypress.io/)
 
 ```sh
 yarn test:e2e:dev
 ```
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
+Isso executa os testes de ponta a ponta no servidor de desenvolvimento Vite.
+É muito mais rápido do que a compilação de produção.
 
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
+Mas ainda é recomendado testar a compilação de produção com `test:e2e` antes de implantar (por exemplo, em ambientes CI):
 
 ```sh
 yarn build
 yarn test:e2e
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-yarn lint
 ```
